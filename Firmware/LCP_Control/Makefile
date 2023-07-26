@@ -221,6 +221,7 @@ SRC += S9_temperature.c
 SRC += K9lx_pressure.c
 SRC += artemis_rtc.c
 SRC += artemis_accel.c
+SRC += datalogger.c
 
 
 CSRC = $(filter %.c,$(SRC))

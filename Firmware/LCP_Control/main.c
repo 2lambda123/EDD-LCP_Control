@@ -24,6 +24,7 @@
 #include "S9_temperature.h"
 #include "K9lx_pressure.h"
 #include "i9603n.h"
+#include "datalogger.h"
 
 
 /* uncomment these to test the peripherals */
@@ -39,6 +40,7 @@
 //#define TEST_PISTON
 //#define TEST_RTC
 //#define TEST_ACCL
+//#define TEST_DATALOGGER
 
 int main(void)
 {
@@ -427,7 +429,7 @@ int main(void)
         #endif
 
         // 1s delay
-        #if defined(TEST_GPS) || defined(TEST_MODEM) || defined(TEST_MAX) || defined(TEST_KELLER) || defined(TEST_S9) || defined (TEST_PISTON)
+        #if defined(TEST_GPS) || defined(TEST_MODEM) || defined(TEST_MAX) || defined(TEST_KELLER) || defined(TEST_S9) || defined (TEST_PISTON) || defined (TEST_DATALOGGER)
             // do nothing , see the output of the peripherals if attached
         #else
             am_util_stdio_printf("1 second delay, uncomment the #define to test the peripherals \n");

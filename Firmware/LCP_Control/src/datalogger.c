@@ -2,16 +2,14 @@
 
 static module_t module;
 
-void datalogger_initialize(uint8_t i2c_addr)
+void datalogger_init(void)
 {
     artemis_i2c_t *i2c = &module.i2c;
 
-    module.power.pinConfig = (am_hal_gpio_pincfg_t *)&g_AM_BSP_GPIO_GPS_ON;
-    module.power.pin = AM_BSP_GPIO_GPS_ON;
-    module.extint.pinConfig = (am_hal_gpio_pincfg_t *)&g_AM_BSP_GPIO_GPS_EXTINT;
-    module.extint.pin = AM_BSP_GPIO_GPS_EXTINT;
+    module.power.pinConfig = (am_hal_gpio_pincfg_t *)&g_AM_BSP_GPIO_I2C_1_PWR;
+    module.power.pin = AM_BSP_GPIO_I2C_1_PWR;
 
-    i2c->address = i2c_addr;
+    i2c->address = LOGGER_I2C_ADDRESS;
     
     i2c->iom.module = 1;
 
@@ -20,7 +18,6 @@ void datalogger_initialize(uint8_t i2c_addr)
     artemis_iom_initialize(&i2c->iom);
     
     ARTEMIS_DEBUG_HALSTATUS(am_hal_gpio_pinconfig(module.power.pin, *module.power.pinConfig));
-    ARTEMIS_DEBUG_HALSTATUS(am_hal_gpio_pinconfig(module.extint.pin, *module.extint.pinConfig));
     datalogger_power_on();
     am_hal_systick_delay_us(1000);
     datalogger_power_off();
@@ -70,7 +67,8 @@ void datalogger_send(uint8_t *msg, uint16_t len, bool stop)
 			artemis_stream_write(&txstream, msg, MESSAGE_SIZE);
 			artemis_i2c_send(i2c, false, &txstream);
 			artemis_stream_reset(&txstream);
-			len -= MESSAGE_SIZE
+			msg += MESSAGE_SIZE;
+            len -= MESSAGE_SIZE;
 		}
 		else {
 			artemis_stream_write(&txstream, msg, len);
@@ -79,3 +77,4 @@ void datalogger_send(uint8_t *msg, uint16_t len, bool stop)
 		}
 	}
 }
+

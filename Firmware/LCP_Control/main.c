@@ -40,7 +40,7 @@
 //#define TEST_PISTON
 //#define TEST_RTC
 //#define TEST_ACCL
-//#define TEST_DATALOGGER
+#define TEST_DATALOGGER
 
 int main(void)
 {
@@ -103,6 +103,14 @@ int main(void)
         S9T_init(0, 9600);
         float s_temperature, s_resistance = 0;
     #endif
+#endif
+
+#ifdef TEST_DATALOGGER
+    datalogger_init();
+    datalogger_power_on();
+    const char* test_msg = "Testing 123";
+    uint16_t test_msg_len = strlen(test_msg) + 1;
+    bool logger_stop = true;
 #endif
 
     am_util_stdio_printf("\n\n");
@@ -426,6 +434,10 @@ int main(void)
             //am_util_stdio_printf("piston moving reverse for 1 second...\n");
             //PIS_retract();
             //am_util_delay_ms(1000);
+        #endif
+
+        #ifdef TEST_DATALOGGER
+            datalogger_send((uint8_t *)test_msg, test_msg_len, logger_stop);
         #endif
 
         // 1s delay

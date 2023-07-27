@@ -55,6 +55,8 @@
 #define LOGGER_I2C_ADDRESS   0x2A // I2C address (Qwiic OpenLog Default is 0x2A)
 #define MESSAGE_SIZE           32 // Bytes
 
+typedef uint8_t module_buffer_t[MESSAGE_SIZE];
+
 typedef struct s_module_t
 {
 	artemis_i2c_t i2c;
@@ -64,13 +66,11 @@ typedef struct s_module_t
 		uint32_t pin;
 		am_hal_gpio_pincfg_t *pinConfig;
 	}power;
-	struct {
-		uint32_t pin;
-		am_hal_gpio_pincfg_t *pinConfig;
-	}extint;
 } module_t;
 
-void datalogger_initialize(uint8_t i2c_addr);
+void datalogger_init(void);
 void datalogger_power_on(void);
 void datalogger_power_off(void);
 void datalogger_send(uint8_t *msg, uint16_t len, bool stop);
+
+#endif

@@ -108,9 +108,7 @@ int main(void)
 #ifdef TEST_DATALOGGER
     datalogger_init();
     datalogger_power_on();
-    const char* test_msg = "Testing 123";
-    uint16_t test_msg_len = strlen(test_msg) + 1;
-    bool logger_stop = true;
+    char* test_msg = "Testing 123";
 #endif
 
     am_util_stdio_printf("\n\n");
@@ -437,7 +435,7 @@ int main(void)
         #endif
 
         #ifdef TEST_DATALOGGER
-            datalogger_send((uint8_t *)test_msg, test_msg_len, logger_stop);
+            datalogger_log(test_msg);
         #endif
 
         // 1s delay

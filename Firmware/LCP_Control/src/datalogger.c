@@ -1,5 +1,26 @@
 #include "datalogger.h"
 
+const memoryMap regMap = {
+	.id = 0x00,
+	.status = 0x01,
+	.firmwareMajor = 0x02,
+	.firmwareMinor = 0x03,
+	.i2cAddress = 0x1E,
+	.logInit = 0x05,
+	.createFile = 0x06,
+	.mkDir = 0x07,
+	.cd = 0x08,
+	.readFile = 0x09,
+	.startPosition = 0x0A,
+	.openFile = 0x0B,
+	.writeFile = 0x0C,
+	.fileSize = 0x0D,
+	.list = 0x0E,
+	.rm = 0x0F,
+	.rmrf = 0x10,
+    .syncFile = 0x11,
+};
+
 static module_t module;
 
 void datalogger_init(void)
@@ -57,18 +78,18 @@ void datalogger_send(uint8_t *msg, uint16_t len, bool stop)
 {
 	artemis_i2c_t *i2c = &module.i2c;
 	artemis_stream_t txstream = {0};
-	artemis_stream_setbuffer(&txstream, module.txbuffer, MESSAGE_SIZE);
+	artemis_stream_setbuffer(&txstream, module.txbuffer, DATALOGGER_BUFFER_SIZE);
 	artemis_stream_reset(&txstream);
 
 	while(len > 0)
 	{
-		if(len > MESSAGE_SIZE)
+		if(len > DATALOGGER_BUFFER_SIZE)
 		{
-			artemis_stream_write(&txstream, msg, MESSAGE_SIZE);
+			artemis_stream_write(&txstream, msg, DATALOGGER_BUFFER_SIZE);
 			artemis_i2c_send(i2c, false, &txstream);
 			artemis_stream_reset(&txstream);
-			msg += MESSAGE_SIZE;
-            len -= MESSAGE_SIZE;
+			msg += DATALOGGER_BUFFER_SIZE;
+            len -= DATALOGGER_BUFFER_SIZE;
 		}
 		else {
 			artemis_stream_write(&txstream, msg, len);
@@ -78,3 +99,18 @@ void datalogger_send(uint8_t *msg, uint16_t len, bool stop)
 	}
 }
 
+void send_writeFile_byte()
+{
+    uint8_t msg[] = {regMap.writeFile};  // The message is the writeFile byte
+    uint16_t len = sizeof(msg) / sizeof(msg[0]);  // The length is the size of the array (1 byte in this case)
+    bool stop = true;  // Assuming you want to send a stop signal after the transfer
+
+    datalogger_send(msg, len, stop);
+}
+
+void datalogger_log(char *str)
+{
+	send_writeFile_byte();
+	uint16_t len = strlen(str);  // The length is the size of the string
+    datalogger_send((uint8_t *)str, len, true);  // Cast str to uint8_t. Send stop after the string
+}

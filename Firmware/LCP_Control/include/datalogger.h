@@ -53,9 +53,12 @@
 
 
 #define LOGGER_I2C_ADDRESS   0x2A // I2C address (Qwiic OpenLog Default is 0x2A)
-#define MESSAGE_SIZE           32 // Bytes
+#define DATALOGGER_BUFFER_SIZE           32 // Bytes
 
-typedef uint8_t module_buffer_t[MESSAGE_SIZE];
+//#define DATALOGGER_I2C_DATA_LEN_REG  ( 0xFD )
+//#define DATALOGGER_I2C_DATA_REG      ( 0xFF )
+
+typedef uint8_t module_buffer_t[DATALOGGER_BUFFER_SIZE];
 
 typedef struct s_module_t
 {
@@ -68,9 +71,34 @@ typedef struct s_module_t
 	}power;
 } module_t;
 
+typedef struct {
+	uint8_t id;
+	uint8_t status;
+	uint8_t firmwareMajor;
+	uint8_t firmwareMinor;
+	uint8_t i2cAddress;
+	uint8_t logInit;
+	uint8_t createFile;
+	uint8_t mkDir;
+	uint8_t cd;
+	uint8_t readFile;
+	uint8_t startPosition;
+	uint8_t openFile;
+	uint8_t writeFile;
+	uint8_t fileSize;
+	uint8_t list;
+	uint8_t rm;
+	uint8_t rmrf;
+    uint8_t syncFile;
+} memoryMap;
+
+extern const memoryMap registerMap;
+
 void datalogger_init(void);
 void datalogger_power_on(void);
 void datalogger_power_off(void);
 void datalogger_send(uint8_t *msg, uint16_t len, bool stop);
+void send_writeFile_byte(void);
+void datalogger_log(char *str);
 
 #endif

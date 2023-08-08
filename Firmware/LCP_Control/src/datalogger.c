@@ -103,7 +103,7 @@ void send_writeFile_byte()
 {
     uint8_t msg[] = {regMap.writeFile};  // The message is the writeFile byte
     uint16_t len = sizeof(msg) / sizeof(msg[0]);  // The length is the size of the array (1 byte in this case)
-    bool stop = true;  // Assuming you want to send a stop signal after the transfer
+    bool stop = false;  // Assuming you want to send a stop signal after the transfer
 
     datalogger_send(msg, len, stop);
 }

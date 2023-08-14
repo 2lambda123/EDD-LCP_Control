@@ -96,7 +96,7 @@ void datalogger_power_on(void);
 void datalogger_power_off(void);
 void datalogger_send(uint8_t *msg, uint16_t len, bool stop);
 void send_writeFile_byte(void);
-void datalogger_log(char *str);
+void datalogger_logString(char *str);
 void datalogger_create(char *str);
 void datalogger_mkdir(char *str);
 void datalogger_cd(char *str);

@@ -99,18 +99,23 @@ void datalogger_send(uint8_t *msg, uint16_t len, bool stop)
 	}
 }
 
-void send_writeFile_byte()
+void send_writeFile_byte() // Send the writeFile byte 0x0C, but don't send a stop signal
 {
     uint8_t msg[] = {regMap.writeFile};  // The message is the writeFile byte
     uint16_t len = sizeof(msg) / sizeof(msg[0]);  // The length is the size of the array (1 byte in this case)
-    bool stop = false;  // Assuming you want to send a stop signal after the transfer
+    bool stop = false;  // Don't stop after sending
 
     datalogger_send(msg, len, stop);
 }
 
-void datalogger_log(char *str)
+void datalogger_logString(char *str) // Log a String
 {
 	send_writeFile_byte();
 	uint16_t len = strlen(str);  // The length is the size of the string
     datalogger_send((uint8_t *)str, len, true);  // Cast str to uint8_t. Send stop after the string
+}
+
+void datalogger_create(char *str) // 
+{
+	uint8_t msg[] = {regMap.writeFile};
 }

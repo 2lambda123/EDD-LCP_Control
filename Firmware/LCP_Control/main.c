@@ -435,7 +435,7 @@ int main(void)
         #endif
 
         #ifdef TEST_DATALOGGER
-            datalogger_log(test_msg);
+            datalogger_logString(test_msg);
         #endif
 
         // 1s delay
